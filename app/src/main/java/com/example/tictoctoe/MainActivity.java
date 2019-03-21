@@ -1,0 +1,278 @@
+package com.example.tictoctoe;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+
+/*
+*  Author: Chun-Wei Chiang
+*  Create on: March 19 2019
+*  Mail: Chiang@chunwei.org
+* */
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+
+    /* Declare the variable */
+    Button[] board_button;
+    Button reset;
+    boolean is_player_X = true;
+    int TURN_COUNT = 0;
+    int[][] board_status = new int[3][3];
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        /* Initialize the variable */
+        board_button = new Button[9];
+        board_button[0] = (Button) findViewById(R.id.button1);
+        board_button[1] = (Button) findViewById(R.id.button2);
+        board_button[2] = (Button) findViewById(R.id.button3);
+        board_button[3] = (Button) findViewById(R.id.button4);
+        board_button[4] = (Button) findViewById(R.id.button5);
+        board_button[5] = (Button) findViewById(R.id.button6);
+        board_button[6] = (Button) findViewById(R.id.button7);
+        board_button[7] = (Button) findViewById(R.id.button8);
+        board_button[8] = (Button) findViewById(R.id.button9);
+
+        if (savedInstanceState != null){
+            board_status = (int[][]) savedInstanceState.getSerializable("board");
+            TURN_COUNT = (int) savedInstanceState.getSerializable("TURN_COUNT");
+            is_player_X = (boolean) savedInstanceState.getSerializable("is_player_X");
+
+            for(int i = 0; i < 3; i++){
+                for(int j=0; j < 3; j++){
+                    if(board_status[i][j] == 1){
+                        board_button[ 3*i + j].setText("X");
+                        board_button[ 3*i + j].setEnabled(false);
+                    }else if(board_status[i][j] == 2){
+                        board_button[ 3*i + j].setText("O");
+                        board_button[ 3*i + j].setEnabled(false);
+                    }
+                }
+            }
+
+            Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_LONG).show();
+        }
+
+
+
+        reset = (Button) findViewById(R.id.resetButton);
+
+        for(int i = 0; i < 9; i++){
+            board_button[i].setOnClickListener(this);
+        }
+        reset.setOnClickListener(this);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putSerializable("board", board_status);
+        savedInstanceState.putSerializable("TURN_COUNT", TURN_COUNT);
+        savedInstanceState.putSerializable("is_player_X", is_player_X);
+
+    }
+
+    @Override
+    public void onClick(View view){
+
+        boolean resetButtonPressed = false;
+
+        switch (view.getId()){
+            case R.id.button1:
+                if(is_player_X){
+                    board_button[0].setText("X");
+                    board_status[0][0] = 1;
+                }else{
+                    board_button[0].setText("O");
+                    board_status[0][0] = 2;
+                }
+                board_button[0].setEnabled(false);
+                break;
+            case R.id.button2:
+                if(is_player_X){
+                    board_button[1].setText("X");
+                    board_status[0][1] = 1;
+                }else{
+                    board_button[1].setText("O");
+                    board_status[0][1] = 2;
+                }
+                board_button[1].setEnabled(false);
+                break;
+            case R.id.button3:
+                if(is_player_X){
+                    board_button[2].setText("X");
+                    board_status[0][2] = 1;
+                }else{
+                    board_button[2].setText("O");
+                    board_status[0][2] = 2;
+                }
+                board_button[2].setEnabled(false);
+                break;
+            case R.id.button4:
+                if(is_player_X){
+                    board_button[3].setText("X");
+                    board_status[1][0] = 1;
+                }else{
+                    board_button[3].setText("O");
+                    board_status[1][0] = 2;
+                }
+                board_button[3].setEnabled(false);
+                break;
+            case R.id.button5:
+                if(is_player_X){
+                    board_button[4].setText("X");
+                    board_status[1][1] = 1;
+                }else{
+                    board_button[4].setText("O");
+                    board_status[1][1] = 2;
+                }
+                board_button[4].setEnabled(false);
+                break;
+            case R.id.button6:
+                if(is_player_X){
+                    board_button[5].setText("X");
+                    board_status[1][2] = 1;
+                }else{
+                    board_button[5].setText("O");
+                    board_status[1][2] = 2;
+                }
+                board_button[5].setEnabled(false);
+                break;
+            case R.id.button7:
+                if(is_player_X){
+                    board_button[6].setText("X");
+                    board_status[2][0] = 1;
+                }else{
+                    board_button[6].setText("O");
+                    board_status[2][0] = 2;
+                }
+                board_button[6].setEnabled(false);
+                break;
+            case R.id.button8:
+                if(is_player_X){
+                    board_button[7].setText("X");
+                    board_status[2][1] = 1;
+                }else{
+                    board_button[7].setText("O");
+                    board_status[2][1] = 2;
+                }
+                board_button[7].setEnabled(false);
+                break;
+            case R.id.button9:
+                if(is_player_X){
+                    board_button[8].setText("X");
+                    board_status[2][2] = 1;
+                }else{
+                    board_button[8].setText("O");
+                    board_status[2][2] = 2;
+                }
+                board_button[8].setEnabled(false);
+                break;
+            case R.id.resetButton:
+                resetButtonPressed = true;
+        }
+
+        if(resetButtonPressed){
+            resetGame();
+        }else{
+            TURN_COUNT++;
+            boolean gameover = checkWinner();
+            if (gameover){
+                gameStop();
+            }else{
+                if(TURN_COUNT == 9){
+                    Toast.makeText(getApplicationContext(), "Game Draw", Toast.LENGTH_LONG).show();
+                }else{
+                    is_player_X = !is_player_X;
+                    if(is_player_X){
+                        Toast.makeText(getApplicationContext(), "Player X Turn", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Toast.makeText(getApplicationContext(), "Player O Turn", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    }
+
+    private boolean checkWinner(){
+        // Horizontal
+        for(int i = 0; i < 3; i++){
+            if(board_status[i][0] == board_status[i][1] && board_status[i][1] == board_status[i][2]){
+                if(board_status[i][0] == 1){
+                    Toast.makeText(getApplicationContext(), "Player X win", Toast.LENGTH_LONG).show();
+                    return true;
+                }else if(board_status[i][0] == 2){
+                    Toast.makeText(getApplicationContext(), "Player O win", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            }
+        }
+
+        // Vertical
+        for(int i = 0; i < 3; i++){
+            if(board_status[0][i] == board_status[1][i] && board_status[1]
+                    [i] == board_status[2][i]){
+                if(board_status[0][i] == 1){
+                    Toast.makeText(getApplicationContext(), "Player X win", Toast.LENGTH_LONG).show();
+                    return true;
+                }else if(board_status[0][i] == 2){
+                    Toast.makeText(getApplicationContext(), "Player O win", Toast.LENGTH_LONG).show();
+                    return true;
+                }
+            }
+        }
+
+        // First diagonal
+        if(board_status[0][0] == board_status[1][1] && board_status[1][1] == board_status[2][2]){
+            if(board_status[0][0] == 1){
+                Toast.makeText(getApplicationContext(), "Player X win", Toast.LENGTH_LONG).show();
+                return true;
+            }else if(board_status[0][0] == 2){
+                Toast.makeText(getApplicationContext(), "Player O win", Toast.LENGTH_LONG).show();
+                return true;
+            }
+        }
+
+        // Second diagonal
+        if(board_status[0][2] == board_status[1][1] && board_status[1][1] == board_status[2][0]){
+            if(board_status[0][2] == 1){
+                Toast.makeText(getApplicationContext(), "Player X win", Toast.LENGTH_LONG).show();
+                return true;
+            }else if(board_status[0][2] == 2){
+                Toast.makeText(getApplicationContext(), "Player O win", Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+    private void gameStop(){
+        for(int i=0; i<9; i++) {
+            board_button[i].setEnabled(false);
+        }
+    }
+
+    private void resetGame(){
+        for(int i=0; i<9; i++) {
+            board_button[i].setText("");
+            board_button[i].setEnabled(true);
+        }
+
+        is_player_X = true;
+        TURN_COUNT = 0;
+        board_status = new int[3][3];
+        Toast.makeText(getApplicationContext(), "Board Restart", Toast.LENGTH_SHORT).show();
+    }
+
+}
