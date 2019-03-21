@@ -19,9 +19,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /* Declare the variable */
     Button[] board_button;
     Button reset;
-    boolean is_player_X = true;
-    int TURN_COUNT = 0;
-    int[][] board_status = new int[3][3];
+    Boolean is_player_X;
+    Boolean game_over;
+    int TURN_COUNT;
+    int[][] board_status;
 
 
     @Override
@@ -43,8 +44,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (savedInstanceState != null){
             board_status = (int[][]) savedInstanceState.getSerializable("board");
-            TURN_COUNT = (int) savedInstanceState.getSerializable("TURN_COUNT");
-            is_player_X = (boolean) savedInstanceState.getSerializable("is_player_X");
+            TURN_COUNT = (int) savedInstanceState.getInt("TURN_COUNT");
+            is_player_X = (Boolean) savedInstanceState.getBoolean("is_player_X");
+            game_over = (Boolean)savedInstanceState.getBoolean("game_over");
 
             for(int i = 0; i < 3; i++){
                 for(int j=0; j < 3; j++){
@@ -58,10 +60,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
 
-            Toast.makeText(getApplicationContext(), "Start", Toast.LENGTH_LONG).show();
+            if (game_over){
+                for(int i = 0; i < 3; i++){
+                    for(int j=0; j < 3; j++){
+                        board_button[ 3*i + j].setEnabled(false);
+                    }
+                }
+            }
         }
 
-
+        if (board_status == null){
+            board_status = new int[3][3];
+        }
+        if (is_player_X == null){
+            is_player_X = true;
+        }
+        if (game_over == null){
+            game_over = false;
+        }
 
         reset = (Button) findViewById(R.id.resetButton);
 
@@ -76,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
         savedInstanceState.putSerializable("board", board_status);
-        savedInstanceState.putSerializable("TURN_COUNT", TURN_COUNT);
-        savedInstanceState.putSerializable("is_player_X", is_player_X);
-
+        savedInstanceState.putInt("TURN_COUNT", TURN_COUNT);
+        savedInstanceState.putBoolean("is_player_X", is_player_X);
+        savedInstanceState.putBoolean("game_over",game_over);
     }
 
     @Override
@@ -185,8 +201,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             resetGame();
         }else{
             TURN_COUNT++;
-            boolean gameover = checkWinner();
-            if (gameover){
+            game_over = checkWinner();
+            if (game_over){
                 gameStop();
             }else{
                 if(TURN_COUNT == 9){
@@ -272,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         is_player_X = true;
         TURN_COUNT = 0;
         board_status = new int[3][3];
+        game_over = false;
         Toast.makeText(getApplicationContext(), "Board Restart", Toast.LENGTH_SHORT).show();
     }
 
